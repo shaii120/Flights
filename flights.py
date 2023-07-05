@@ -1,6 +1,9 @@
 import pandas as pd
-import os
+import os, json
 from datetime import timedelta
+from flask import Flask, request
+
+app = Flask(__name__)
 
 
 class Flights:
@@ -30,7 +33,7 @@ class Flights:
     def get_flights(self, flights_id):
         return self.data.drop("Waiting", axis=1).loc[flights_id]
 
-    def insert_flight(self, flight_id: str, arrival, departure):
+    def update_flight(self, flight_id: str, arrival, departure):
         arrival = pd.to_datetime(arrival, format="%H:%M")
         departure = pd.to_datetime(departure, format="%H:%M")
         waiting = departure - arrival
@@ -42,3 +45,43 @@ class Flights:
         }
         self.data.loc[flight_id] = row
         self.anlayze_success_flights()
+
+    def is_flight_exist(self, id: str):
+        return id in self.data.index
+
+    def save_csv(self):
+        self.data.to_csv(self.CSV_PATH)
+
+
+flights = Flights()
+
+
+@app.get("/")
+def index():
+    return "Hello! please read the README file"
+
+
+@app.get("/flight/<id>")
+def get_flight(id):
+    if not flights.is_flight_exist(id):
+        return {"error": "not found"}
+    flight = flights.get_flights(id)
+    if type(flight) == pd.DataFrame:
+        flight = flight.iloc[0]
+    flight["Arrival"] = flight["Arrival"].time()
+    flight["Departure"] = flight["Departure"].time()
+    return json.loads(flight.to_json())
+
+
+@app.post("/update_flights")
+def update_flights():
+    for flight in request.json["flights"]:
+        flights.update_flight(
+            flight["flight_id"], flight["arrival"], flight["departure"]
+        )
+    flights.save_csv()
+    return {"message": "success"}
+
+
+if __name__ == "__main__":
+    app.run()

@@ -23,7 +23,7 @@ class TestFlights(unittest.TestCase):
         arrival = "12:34"
         departure = "23:45"
         flight = self.flight_series(flight_id, arrival, departure, "success")
-        self.flights.insert_flight(flight_id, arrival, departure)
+        self.flights.update_flight(flight_id, arrival, departure)
 
         pd.testing.assert_series_equal(self.flights.get_flights(flight_id), flight)
 
@@ -44,5 +44,5 @@ class TestFlights(unittest.TestCase):
         self.flights.anlayze_success_flights()
         self.assertEqual(self.flights.get_flights("A19")["success"], "fail")
         self.assertEqual(self.flights.get_flights("B35")["success"], "success")
-        self.flights.insert_flight(flight_id, arrival, departure)
+        self.flights.update_flight(flight_id, arrival, departure)
         self.assertEqual(self.flights.get_flights(flight_id)["success"], "success")
