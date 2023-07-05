@@ -50,7 +50,10 @@ class Flights:
         return id in self.data.index
 
     def save_csv(self):
-        self.data.to_csv(self.CSV_PATH)
+        copy = self.data.drop("Waiting", axis=1)
+        copy["Arrival"] = pd.to_datetime(copy["Arrival"]).dt.strftime("%H:%M")
+        copy["Departure"] = pd.to_datetime(copy["Departure"]).dt.strftime("%H:%M")
+        copy.to_csv(self.CSV_PATH)
 
 
 flights = Flights()
@@ -77,7 +80,7 @@ def get_flight(id):
 def update_flights():
     for flight in request.json["flights"]:
         flights.update_flight(
-            flight["flight_id"], flight["arrival"], flight["departure"]
+            flight["flight ID"], flight["Arrival"], flight["Departure"]
         )
     flights.save_csv()
     return {"message": "success"}

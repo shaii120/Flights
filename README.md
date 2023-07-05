@@ -13,9 +13,9 @@ Use the following JSON structre:
 {
     "flights" : [
         {
-            "flight_id": id,
-            "arrival": "HH:MM",
-            "departure": "HH:MM"
+            "flight ID": id,
+            "Arrival": "HH:MM",
+            "Departure": "HH:MM"
         },
         ...
     ]
@@ -26,9 +26,9 @@ example:
 {
     "flights" : [
         {
-            "flight_id": "A123",
-            "arrival": "12:34",
-            "departure": "23:45"
+            "flight ID": "A123",
+            "Arrival": "12:34",
+            "Departure": "23:45"
         }
     ]
 }
