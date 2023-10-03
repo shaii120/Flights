@@ -1,5 +1,4 @@
-# bondIT Test
-
+# Flights
 ## Guide
 1. Run the following command to activate the server:
 `flask --app flights run`
